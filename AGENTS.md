@@ -32,6 +32,7 @@ It has two layers, kept clearly separate (the same split DPA and New Relic use b
 - Collectors take the tick timestamp: `collect(timestamp) -> list[Sample]`, so every sample in a tick shares one time.
 - Counter metrics (disk/network I/O) are reported as per-second rates, starting from the second sample; counter resets yield no sample rather than a negative rate.
 - Disk usage skips read-only image filesystems (squashfs, iso9660, udf, erofs, cramfs) by default.
+- Copyright holder is **MyLabs LLC** (in `LICENSE` and package metadata).
 
 ## Suggested architecture
 
@@ -87,5 +88,5 @@ Ship a release to PyPI at the end of each milestone (bump the version, push a `v
 - Other databases beyond SQL Server? (Assume SQL Server only for now.)
 - Agent/collector deployment model: run on the DB host, or remotely over the network? (Assume remote over ODBC to start.)
 - How Pyrometer integrates with Anvil (shared data store? Anvil runs Pyrometer during model tests?).
-- License: placeholder is MIT; confirm. Note `LICENSE` names "Ryan Lence" as copyright holder while the package metadata says MyLabs LLC; decide which is right.
+- License: placeholder is MIT; confirm.
 - Milestone 1 release: tag `v0.1.0` once the PyPI trusted publisher is configured?
