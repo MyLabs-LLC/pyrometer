@@ -8,11 +8,11 @@ Pyrometer is the sibling project to **Anvil**, the workbench where Gaia's models
 
 It has two layers, kept clearly separate (the same split DPA and New Relic use between system-level and app-level views):
 
-1. **Host layer** (working name: Gauge, module `pyrometer.gauge`)
+1. **Host layer** (module `pyrometer.gauge`)
    PyFormance-style system metrics: CPU, memory, disk, network, and GPU. Low overhead, sampled on an interval, usable as a library and from the CLI.
 
-2. **Database layer** (module `pyrometer.sqlserver`; product name not decided, see Open questions)
-   DPA-style deep analysis of SQL Server: look past CPU/memory/disk to what is happening inside the engine. Which queries are running and costing the most, which wait types dominate, which sessions are blocking which, and what the query plans look like.
+2. **Database layer** (one module per engine: `pyrometer.sqlserver` first, later e.g. `pyrometer.mysql`, `pyrometer.oracle`)
+   No separate product name: it is all just Pyrometer. DPA-style deep analysis of SQL Server: look past CPU/memory/disk to what is happening inside the engine. Which queries are running and costing the most, which wait types dominate, which sessions are blocking which, and what the query plans look like.
 
 ## Current state
 
@@ -33,6 +33,7 @@ It has two layers, kept clearly separate (the same split DPA and New Relic use b
 - Counter metrics (disk/network I/O) are reported as per-second rates, starting from the second sample; counter resets yield no sample rather than a negative rate.
 - Disk usage skips read-only image filesystems (squashfs, iso9660, udf, erofs, cramfs) by default.
 - Copyright holder is **MyLabs LLC** (in `LICENSE` and package metadata).
+- **No sub-brand names.** The product is just Pyrometer. Database support is one module per engine (`pyrometer.sqlserver`, `pyrometer.mysql`, `pyrometer.oracle`...), each with its own extra (`pyrometer[sqlserver]`, `pyrometer[mysql]`...). Names like Gauge, Assay, Temper, Quench are not used.
 
 ## Suggested architecture
 
@@ -44,6 +45,7 @@ src/pyrometer/
   core/          # shared pieces: Metric/Sample types, sampler loop, registry, clock
   gauge/         # host metrics collectors (cpu, memory, disk, network, gpu)
   sqlserver/     # SQL Server collectors and analysis
+  mysql/, oracle/ ...  # later: one package per database engine, same pattern as sqlserver/
   storage/       # where samples go (start with in-memory + SQLite; JSON/Prometheus export later)
   cli.py         # `pyrometer` command
 tests/
@@ -84,12 +86,7 @@ Ship a release to PyPI at the end of each milestone (bump the version, push a `v
 
 ## Open questions (ask the owner, don't decide silently)
 
-- **Name for the SQL Server layer.** "Assay" was considered but is already used by two Python observability packages that both claim `import assay`, so avoid it. Candidates from the forge theme were checked on 2026-10-21:
-  - PyPI bare names are all taken, but none by a monitoring tool: `temper` (HTML DSL, one release in 2013), `slag` (blockchain micro-blog, last release 2019), `quench` (constraint-based scheduling engine, May 2026, active), `hearth` (PyTorch utilities, last release 2022).
-  - `pyrometer-temper`, `pyrometer-slag`, `pyrometer-quench`, `pyrometer-hearth` and `pyrometer` itself are free on PyPI.
-  - Web search found no SQL Server or database-monitoring product using any of the four names. GitHub-wide search and USPTO were not checked.
-  - Because the layer ships inside this package (`pyrometer.<name>`), the taken bare PyPI names only matter if the layer is ever split out; `pyrometer-<name>` would cover that.
-- Other databases beyond SQL Server? (Assume SQL Server only for now.)
+- Which databases after SQL Server, and in what order? (MySQL and Oracle are named as examples; build SQL Server first.)
 - Agent/collector deployment model: run on the DB host, or remotely over the network? (Assume remote over ODBC to start.)
 - How Pyrometer integrates with Anvil (shared data store? Anvil runs Pyrometer during model tests?).
 - License: placeholder is MIT; confirm.

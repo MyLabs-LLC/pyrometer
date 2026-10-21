@@ -6,9 +6,10 @@ Performance monitoring for hosts and SQL Server, from MyLabs LLC.
 
 Pyrometer has two layers that write the same data model, so they can share one timeline:
 
-- **Gauge** (`pyrometer.gauge`): host metrics — CPU, memory, disk, network, GPU. **Works today.**
-- **SQL Server** (`pyrometer.sqlserver`): DPA-style wait sampling, top queries, plans and
-  blocking chains. *Planned (milestone 2).*
+- **Host** (`pyrometer.gauge`): CPU, memory, disk, network, GPU. **Works today.**
+- **Databases**, one module per engine: `pyrometer.sqlserver` first (DPA-style wait sampling,
+  top queries, plans and blocking chains; *planned, milestone 2*), with `pyrometer.mysql`,
+  `pyrometer.oracle` and others to follow.
 
 ## Install
 
