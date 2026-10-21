@@ -84,7 +84,11 @@ Ship a release to PyPI at the end of each milestone (bump the version, push a `v
 
 ## Open questions (ask the owner, don't decide silently)
 
-- **Name for the SQL Server layer.** "Assay" was considered but is already used by two Python observability packages that both claim `import assay`, so avoid it. Candidates from the forge theme: Temper, Slag, Quench, Hearth (not yet checked for conflicts).
+- **Name for the SQL Server layer.** "Assay" was considered but is already used by two Python observability packages that both claim `import assay`, so avoid it. Candidates from the forge theme were checked on 2026-10-21:
+  - PyPI bare names are all taken, but none by a monitoring tool: `temper` (HTML DSL, one release in 2013), `slag` (blockchain micro-blog, last release 2019), `quench` (constraint-based scheduling engine, May 2026, active), `hearth` (PyTorch utilities, last release 2022).
+  - `pyrometer-temper`, `pyrometer-slag`, `pyrometer-quench`, `pyrometer-hearth` and `pyrometer` itself are free on PyPI.
+  - Web search found no SQL Server or database-monitoring product using any of the four names. GitHub-wide search and USPTO were not checked.
+  - Because the layer ships inside this package (`pyrometer.<name>`), the taken bare PyPI names only matter if the layer is ever split out; `pyrometer-<name>` would cover that.
 - Other databases beyond SQL Server? (Assume SQL Server only for now.)
 - Agent/collector deployment model: run on the DB host, or remotely over the network? (Assume remote over ODBC to start.)
 - How Pyrometer integrates with Anvil (shared data store? Anvil runs Pyrometer during model tests?).
