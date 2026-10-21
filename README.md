@@ -6,7 +6,7 @@ Performance monitoring for hosts and SQL Server, from MyLabs LLC.
 
 Pyrometer has two layers that write the same data model, so they can share one timeline:
 
-- **Host** (`pyrometer.gauge`): CPU, memory, disk, network, GPU. **Works today.**
+- **Host** (`pyrometer.host`): CPU, memory, disk, network, GPU. **Works today.**
 - **Databases**, one module per engine: `pyrometer.sqlserver` first (DPA-style wait sampling,
   top queries, plans and blocking chains; *planned, milestone 2*), with `pyrometer.mysql`,
   `pyrometer.oracle` and others to follow.
@@ -34,7 +34,7 @@ pyrometer bench                     # what each collector costs per tick
 ## Quickstart: library
 
 ```python
-import pyrometer.gauge  # registers the host collectors
+import pyrometer.host  # registers the host collectors
 from pyrometer import Sampler, registry
 from pyrometer.storage import SQLiteStorage
 

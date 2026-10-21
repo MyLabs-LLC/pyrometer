@@ -10,7 +10,7 @@ from collections import defaultdict
 from collections.abc import Sequence
 from typing import TextIO
 
-import pyrometer.gauge  # noqa: F401  (registers host collectors)
+import pyrometer.host  # noqa: F401  (registers host collectors)
 from pyrometer import __version__
 from pyrometer.core import COLLECTOR_DURATION, COLLECTOR_ERRORS, Sample, Sampler, Sink, registry
 from pyrometer.storage import SQLiteStorage

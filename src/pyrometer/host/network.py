@@ -6,7 +6,7 @@ import psutil
 
 from pyrometer.core.collector import registry
 from pyrometer.core.sample import Sample
-from pyrometer.gauge._rates import RateTracker
+from pyrometer.host._rates import RateTracker
 
 _FIELDS = {
     "bytes_sent": "net.sent_bytes_per_sec",

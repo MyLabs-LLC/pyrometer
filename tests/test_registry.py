@@ -45,7 +45,7 @@ def test_create_available_skips_unavailable() -> None:
 
 
 def test_host_collectors_registered() -> None:
-    import pyrometer.gauge  # noqa: F401
+    import pyrometer.host  # noqa: F401
     from pyrometer.core import registry
 
     assert {"cpu", "memory", "disk", "network", "gpu"} <= set(registry.names())

@@ -7,14 +7,14 @@ from collections import namedtuple
 import pytest
 
 from pyrometer.core import CollectorUnavailable
-from pyrometer.gauge import (
+from pyrometer.host import (
     CpuCollector,
     DiskCollector,
     GpuCollector,
     MemoryCollector,
     NetworkCollector,
 )
-from pyrometer.gauge._rates import RateTracker
+from pyrometer.host._rates import RateTracker
 
 
 def names(samples: list) -> set[str]:
@@ -50,7 +50,7 @@ def test_memory() -> None:
 
 
 def test_disk_rates_start_on_second_call(monkeypatch: pytest.MonkeyPatch) -> None:
-    import pyrometer.gauge.disk as disk
+    import pyrometer.host.disk as disk
 
     IO = namedtuple("IO", "read_bytes write_bytes read_count write_count")
     readings = iter([{"sda": IO(0, 0, 0, 0)}, {"sda": IO(4096, 8192, 1, 2)}])
@@ -69,7 +69,7 @@ def test_disk_rates_start_on_second_call(monkeypatch: pytest.MonkeyPatch) -> Non
 
 
 def test_disk_skips_image_filesystems(monkeypatch: pytest.MonkeyPatch) -> None:
-    import pyrometer.gauge.disk as disk
+    import pyrometer.host.disk as disk
 
     Part = namedtuple("Part", "device mountpoint fstype opts")
     Usage = namedtuple("Usage", "total used free percent")
@@ -93,7 +93,7 @@ def test_disk_real() -> None:
 
 
 def test_network_rates_and_loopback(monkeypatch: pytest.MonkeyPatch) -> None:
-    import pyrometer.gauge.network as net
+    import pyrometer.host.network as net
 
     fields = "bytes_sent bytes_recv packets_sent packets_recv errin errout dropin dropout"
     Nic = namedtuple("Nic", fields)

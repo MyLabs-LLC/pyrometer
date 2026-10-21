@@ -8,7 +8,7 @@ Pyrometer is the sibling project to **Anvil**, the workbench where Gaia's models
 
 It has two layers, kept clearly separate (the same split DPA and New Relic use between system-level and app-level views):
 
-1. **Host layer** (module `pyrometer.gauge`)
+1. **Host layer** (module `pyrometer.host`)
    PyFormance-style system metrics: CPU, memory, disk, network, and GPU. Low overhead, sampled on an interval, usable as a library and from the CLI.
 
 2. **Database layer** (one module per engine: `pyrometer.sqlserver` first, later e.g. `pyrometer.mysql`, `pyrometer.oracle`)
@@ -18,7 +18,7 @@ It has two layers, kept clearly separate (the same split DPA and New Relic use b
 
 - **Milestone 1 (core + host layer) is built**, version `0.1.0`, not yet tagged or published.
   - `core/`: `Sample` data model, `Collector` protocol + name registry (`CollectorUnavailable` for collectors that can't run here), `Clock`, and the `Sampler` loop (drift-free scheduling, skips missed slots, isolates failing collectors, records its own per-collector cost as `pyrometer.collector.duration_seconds`).
-  - `gauge/`: `cpu`, `memory`, `disk`, `network`, `gpu` collectors. GPU imports `pynvml` lazily.
+  - `host/`: `cpu`, `memory`, `disk`, `network`, `gpu` collectors. GPU imports `pynvml` lazily.
   - `storage/`: `MemoryStorage` (ring buffer) and `SQLiteStorage`, both with `query(name, since, until, tags)`.
   - `cli.py`: `pyrometer watch` (summary / `--raw` / `--json`, optional `--db`), `pyrometer collectors`, `pyrometer bench`.
   - `sqlserver/`: empty placeholder for milestone 2.
@@ -33,7 +33,7 @@ It has two layers, kept clearly separate (the same split DPA and New Relic use b
 - Counter metrics (disk/network I/O) are reported as per-second rates, starting from the second sample; counter resets yield no sample rather than a negative rate.
 - Disk usage skips read-only image filesystems (squashfs, iso9660, udf, erofs, cramfs) by default.
 - Copyright holder is **MyLabs LLC** (in `LICENSE` and package metadata).
-- **No sub-brand names.** The product is just Pyrometer. Database support is one module per engine (`pyrometer.sqlserver`, `pyrometer.mysql`, `pyrometer.oracle`...), each with its own extra (`pyrometer[sqlserver]`, `pyrometer[mysql]`...). Names like Gauge, Assay, Temper, Quench are not used.
+- **No sub-brand names.** The product is just Pyrometer. Database support is one module per engine (`pyrometer.sqlserver`, `pyrometer.mysql`, `pyrometer.oracle`...), each with its own extra (`pyrometer[sqlserver]`, `pyrometer[mysql]`...). Names like Gauge (the host module is `pyrometer.host`), Assay, Temper, Quench are not used.
 
 ## Suggested architecture
 
@@ -43,7 +43,7 @@ Treat these as a starting point. Propose changes before making big ones.
 src/pyrometer/
   __init__.py
   core/          # shared pieces: Metric/Sample types, sampler loop, registry, clock
-  gauge/         # host metrics collectors (cpu, memory, disk, network, gpu)
+  host/          # host metrics collectors (cpu, memory, disk, network, gpu)
   sqlserver/     # SQL Server collectors and analysis
   mysql/, oracle/ ...  # later: one package per database engine, same pattern as sqlserver/
   storage/       # where samples go (start with in-memory + SQLite; JSON/Prometheus export later)
